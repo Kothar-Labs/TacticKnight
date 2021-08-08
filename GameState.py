@@ -6,8 +6,8 @@ class GameState():
         self.player2 = Player("P2")
 
     def one_round(self):
-        self.player1.act(input("Input player 1's action:"))
-        self.player2.act(input("Input player 2's action:"))
+        self.player1.act(input(f"Input {self.player1.name}'s action:"))
+        self.player2.act(input(f"Input {self.player2.name}'s action:"))
         self.player1.defense_state.apply_skill_effect(self.player1, self.player2, \
             self.player2.offense_state)
         self.player2.defense_state.apply_skill_effect(self.player2, self.player1, \

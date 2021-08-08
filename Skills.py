@@ -40,9 +40,13 @@ class Avoid(DefensiveSkill):
         then applies offensive_skill with the modified hit_times
         '''
         hit_times = offensive_skill.hit_times
-        if offensive_skill.damage_type != "unavoidable":
+        if offensive_skill.damage_type == "spinning":
+            offensive_skill.damage_target(user, offensive_skill.avoid_damage, hit_times)
+        elif offensive_skill.damage_type == "unavoidable":
+            offensive_skill.damage_target(user, offensive_skill.damage, hit_times)
+        else:
             hit_times //= 2
-        offensive_skill.damage_target(user, offensive_skill.damage, hit_times)
+            offensive_skill.damage_target(user, offensive_skill.damage, hit_times)
 
 class Block(DefensiveSkill):
     def __init__(self):
@@ -53,12 +57,15 @@ class Block(DefensiveSkill):
         Applies offensive_skill under the condition that the target of the offensive
         skill is blocking.
         '''
-        if offensive_skill.damage_type != "unblockable":
-            offensive_skill.damage_target(user, offensive_skill.damage, \
-                offensive_skill.hit_times, blocked = True)
-        else:
+        if offensive_skill.damage_type == "unblockable":
             offensive_skill.damage_target(user, offensive_skill.damage, \
                 offensive_skill.hit_times, blocked = False)
+        elif offensive_skill.damage_type == "electric":
+            offensive_skill.damage_target(user, offensive_skill.effective_damage, \
+                offensive_skill.hit_times, blocked = False)
+        else:
+            offensive_skill.damage_target(user, offensive_skill.damage, \
+            offensive_skill.hit_times, blocked = True)
 
 class Clash(DefensiveSkill):
     def __init__(self):
@@ -71,6 +78,9 @@ class Clash(DefensiveSkill):
         '''
         if offensive_skill.damage_type == "melee":
             offensive_skill.damage_target(target, offensive_skill.damage, \
+                offensive_skill.hit_times)
+        elif offensive_skill.damage_type == "electric":
+            offensive_skill.damage_target(user, offensive_skill.effective_damage, \
                 offensive_skill.hit_times)
         else:
             offensive_skill.damage_target(user, offensive_skill.damage, \
@@ -98,6 +108,8 @@ class OffensiveSkill(Skill):
                 target.shield_hp = 0
         else:
             target.hp -= damage * hit_times
+            if target.hp < 0:
+                target.hp = 0
         pass
 
 class CeaseFire(OffensiveSkill):
@@ -116,3 +128,45 @@ class Strike(OffensiveSkill):
         self.damage = 2
         self.hit_times = 1
         self.damage_type = "melee"
+
+class MultiArrow(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Multi Arrow", 1)
+        self.damage = 1
+        self.hit_times = 3
+        self.damage_type = "ranged"
+
+class SplashingArrow(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Splashing Arrow", 1)
+        self.damage = 0
+        self.effective_damage = 4
+        self.hit_times = 1
+        self.damage_type = "spinning"
+
+class ElectricArrow(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Electric Arrow", 1)
+        self.damage = 0
+        self.effective_damage = 4
+        self.hit_times = 1
+        self.damage_type = "electric"
+    
+class ArrowStorm(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Arrow Storm", 2)
+        self.damage = 1
+        self.hit_times = 5
+
+class RicochetShot(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Arrow of Wisdom", 3)
+        self.damage = 6
+        self.hit_times = 1
+        self.damage_type = "unavoidable"
+
+class EagleEyeAssault(OffensiveSkill):
+    def __init__(self):
+        super().__init__("Eagle Eye Assault", 5)
+        self.damage = 3
+        self.hit_times = 5

@@ -2,17 +2,33 @@ from Skills import *
 
 rest = Rest()
 cease_fire = CeaseFire()
-string_to_defensive_skill = {"a" : Avoid(), \
-    "b" : Block(), \
-    "c" : Clash(), \
-    "f" : rest, \
-    "strike" : rest}
-string_to_offensive_skill = {"a" : cease_fire, \
-    "b" : cease_fire, \
-    "c" : cease_fire, \
-    "f" : Shoot(), \
-    "strike" : Strike()
-    }
+string_to_defensive_skill = {
+    "a" : Avoid(),
+    "b" : Block(),
+    "c" : Clash(),
+    "f" : rest,
+    "strike" : rest,
+    "multi arrow": rest,
+    "splashing arrow": rest,
+    "electric arrow": rest,
+    "arrow storm": rest,
+    "ricochet shot": rest,
+    "eagle eye assault": rest
+}
+
+string_to_offensive_skill = {
+    "a" : cease_fire,
+    "b" : cease_fire,
+    "c" : cease_fire,
+    "f" : Shoot(),
+    "strike" : Strike(),
+    "multi arrow": MultiArrow(),
+    "splashing arrow": SplashingArrow(),
+    "electric arrow": ElectricArrow(),
+    "arrow storm": ArrowStorm(),
+    "ricochet shot": RicochetShot(),
+    "eagle eye assault": EagleEyeAssault()
+}
 
 class Player():
     def __init__(self, name, max_hp = 20, max_phase = 5, max_shield_hp = 10):
